@@ -1,0 +1,153 @@
+{{- $esDaemonSet := eq .Values.modoDespliegue "daemonset" -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+    app: otel-collector
+    nube: {{ .Values.nube }}
+data:
+  # El archivo viene de collector/otel-collector-<nube>.yaml del repositorio.
+  # Asi la configuracion queda versionada en un solo lugar.
+  config.yaml: |
+{{ .Files.Get (printf "config/otel-collector-%s.yaml" .Values.nube) | indent 4 }}
+
+{{- if .Values.serviceAccount.crear }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.serviceAccount.nombre }}
+  annotations:
+{{ toYaml .Values.serviceAccount.anotaciones | indent 4 }}
+{{- end }}
+
+---
+# El Collector necesita leer metadatos de los pods para el procesador
+# k8sattributes. Son permisos de solo lectura.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ .Release.Name }}-lector
+rules:
+  - apiGroups: [""]
+    resources: [pods, namespaces, nodes]
+    verbs: [get, list, watch]
+  - apiGroups: ["apps"]
+    resources: [replicasets, deployments]
+    verbs: [get, list, watch]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ .Release.Name }}-lector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ .Release.Name }}-lector
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.serviceAccount.nombre }}
+    namespace: {{ .Release.Namespace }}
+
+---
+apiVersion: apps/v1
+kind: {{ if $esDaemonSet }}DaemonSet{{ else }}Deployment{{ end }}
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: otel-collector
+    nube: {{ .Values.nube }}
+spec:
+  {{- if not $esDaemonSet }}
+  replicas: {{ .Values.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: otel-collector
+  template:
+    metadata:
+      labels:
+        app: otel-collector
+      annotations:
+        # Fuerza el reinicio del pod cuando cambia la configuracion.
+        checksum/config: {{ .Files.Get (printf "config/otel-collector-%s.yaml" .Values.nube) | sha256sum }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.nombre }}
+      containers:
+        - name: collector
+          image: "{{ .Values.imagen.repositorio }}:{{ .Values.imagen.etiqueta }}"
+          imagePullPolicy: {{ .Values.imagen.politica }}
+          args: ["--config=/conf/config.yaml"]
+          ports:
+            - name: otlp-grpc
+              containerPort: {{ .Values.puertos.otlpGrpc }}
+            - name: otlp-http
+              containerPort: {{ .Values.puertos.otlpHttp }}
+            - name: prom-export
+              containerPort: {{ .Values.puertos.metricasExportadas }}
+            - name: prom-self
+              containerPort: {{ .Values.puertos.metricasInternas }}
+          env:
+            - name: K8S_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+{{- range .Values.variablesEntorno }}
+            - name: {{ .nombre }}
+              value: "{{ .valor }}"
+{{- end }}
+          resources:
+{{ toYaml .Values.recursos | indent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.puertos.salud }}
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.puertos.salud }}
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          configMap:
+            name: {{ .Release.Name }}-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  labels:
+    app: otel-collector
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ .Values.puertos.metricasExportadas }}"
+spec:
+  selector:
+    app: otel-collector
+  ports:
+    - name: otlp-grpc
+      port: {{ .Values.puertos.otlpGrpc }}
+      targetPort: otlp-grpc
+      protocol: TCP
+    - name: otlp-http
+      port: {{ .Values.puertos.otlpHttp }}
+      targetPort: otlp-http
+      protocol: TCP
+    - name: prom-export
+      port: {{ .Values.puertos.metricasExportadas }}
+      targetPort: prom-export
+    - name: prom-self
+      port: {{ .Values.puertos.metricasInternas }}
+      targetPort: prom-self

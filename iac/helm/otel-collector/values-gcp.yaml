@@ -1,0 +1,22 @@
+nube: gcp
+modoDespliegue: daemonset
+
+serviceAccount:
+  crear: true
+  nombre: otel-collector
+  anotaciones:
+    iam.gke.io/gcp-service-account: otel-demo-collector@MI_PROYECTO.iam.gserviceaccount.com
+
+variablesEntorno:
+  - nombre: GCP_PROJECT_ID
+    valor: MI_PROYECTO
+  - nombre: GOGC
+    valor: "80"
+
+recursos:
+  requests:
+    cpu: 200m
+    memory: 400Mi
+  limits:
+    cpu: "1"
+    memory: 800Mi

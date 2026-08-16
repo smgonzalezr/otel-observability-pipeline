@@ -1,0 +1,5 @@
+project_id   = "mi-proyecto-gcp"
+region       = "us-central1"
+nombre       = "otel-demo"
+nodos        = 2
+tipo_maquina = "e2-standard-2"

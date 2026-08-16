@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="880" viewBox="0 0 1420 880" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a1" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#c0392b"/>
+    </marker>
+  </defs>
+  <rect width="1420" height="880" fill="#ffffff"/>
+
+  <text x="30" y="36" font-size="19" font-weight="bold" fill="#111">Correlacion entre los tres pilares usando trace_id como pivote</text>
+  <text x="30" y="60" font-size="13" fill="#555">Una sola peticion de compra, capturada de verdad en el entorno de pruebas. Los tres bloques comparten el mismo identificador.</text>
+
+  <!-- pivote central -->
+  <rect x="380" y="86" width="660" height="60" rx="8" fill="#fdeceb" stroke="#c0392b" stroke-width="2.5"/>
+  <text x="710" y="110" text-anchor="middle" font-size="14" font-weight="bold" fill="#8b2520">trace_id</text>
+  <text x="710" y="133" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#111">aef4e2c82298fb222f881f25b2383bd3</text>
+
+  <line x1="240" y1="146" x2="240" y2="196" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+  <line x1="710" y1="146" x2="710" y2="196" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+  <line x1="1180" y1="146" x2="1180" y2="196" stroke="#c0392b" stroke-width="2.5" marker-end="url(#a1)"/>
+  <path d="M380 116 L 250 116 L 250 140" fill="none" stroke="#c0392b" stroke-width="2"/>
+  <path d="M1040 116 L 1170 116 L 1170 140" fill="none" stroke="#c0392b" stroke-width="2"/>
+
+  <!-- ============ 1. LOGS ============ -->
+  <rect x="30" y="200" width="420" height="480" rx="10" fill="#f4f8fb" stroke="#4285f4" stroke-width="2"/>
+  <text x="240" y="228" text-anchor="middle" font-size="16" font-weight="bold" fill="#1a5fb4">1. LOGS estructurados</text>
+  <text x="240" y="248" text-anchor="middle" font-size="11.5" fill="#555">salida estandar en JSON, sin campos libres</text>
+
+  <rect x="46" y="262" width="388" height="116" rx="6" fill="#ffffff" stroke="#b9cfe6"/>
+  <text x="56" y="282" font-size="10.5" font-family="Consolas, monospace" fill="#333">{"timestamp": "...", "severity": "INFO",</text>
+  <text x="56" y="298" font-size="10.5" font-family="Consolas, monospace" fill="#333"> "message": "checkout iniciado",</text>
+  <text x="56" y="314" font-size="10.5" font-family="Consolas, monospace" fill="#333"> "service.name": "service-a",</text>
+  <text x="56" y="330" font-size="10.5" font-family="Consolas, monospace" fill="#c0392b"> "trace_id": "aef4e2c822...83bd3",</text>
+  <text x="56" y="346" font-size="10.5" font-family="Consolas, monospace" fill="#c0392b"> "span_id": "b36bf8543506e168",</text>
+  <text x="56" y="362" font-size="10.5" font-family="Consolas, monospace" fill="#333"> "ecommerce.order.id": "ord-10dc0f85abb5"}</text>
+
+  <text x="46" y="402" font-size="12.5" font-weight="bold" fill="#1a5fb4">Las 5 lineas de esta peticion</text>
+  <text x="52" y="424" font-size="11.5" fill="#333">service-a  checkout iniciado</text>
+  <text x="52" y="444" font-size="11.5" fill="#333">service-a  HTTP Request: POST /inventory/reserve</text>
+  <text x="52" y="464" font-size="11.5" fill="#333">service-b  reserva solicitada</text>
+  <text x="52" y="484" font-size="11.5" fill="#333">service-b  reserva confirmada</text>
+  <text x="52" y="504" font-size="11.5" fill="#333">service-a  pedido confirmado</text>
+  <text x="52" y="526" font-size="11" fill="#666">Los dos servicios, un solo trace_id.</text>
+
+  <rect x="46" y="548" width="388" height="116" rx="6" fill="#eef4ff" stroke="#4285f4" stroke-dasharray="4 3"/>
+  <text x="56" y="570" font-size="12" font-weight="bold" fill="#1a5fb4">Como se logra</text>
+  <text x="56" y="590" font-size="11.5" fill="#333">LoggingInstrumentor con inject_trace_context</text>
+  <text x="56" y="608" font-size="11.5" fill="#333">agrega otelTraceID a cada LogRecord y el</text>
+  <text x="56" y="626" font-size="11.5" fill="#333">formateador propio lo escribe como trace_id.</text>
+  <text x="56" y="648" font-size="11" fill="#666">En GCP se agrega logging.googleapis.com/trace</text>
+
+  <!-- ============ 2. TRAZAS ============ -->
+  <rect x="500" y="200" width="420" height="480" rx="10" fill="#f6f4fb" stroke="#7a5cc4" stroke-width="2"/>
+  <text x="710" y="228" text-anchor="middle" font-size="16" font-weight="bold" fill="#4b338f">2. TRAZAS distribuidas</text>
+  <text x="710" y="248" text-anchor="middle" font-size="11.5" fill="#555">20 spans, 2 servicios, 37,97 ms</text>
+
+  <rect x="516" y="262" width="388" height="180" rx="6" fill="#ffffff" stroke="#c6b9e0"/>
+  <text x="526" y="282" font-size="11" fill="#333">POST /checkout</text>
+  <rect x="700" y="272" width="190" height="11" rx="2" fill="#4285f4"/>
+  <text x="534" y="302" font-size="11" fill="#333">└ flujo_checkout</text>
+  <rect x="726" y="292" width="128" height="11" rx="2" fill="#4285f4"/>
+  <text x="542" y="322" font-size="11" fill="#333">└ SELECT clientes</text>
+  <rect x="729" y="312" width="7" height="11" rx="2" fill="#4285f4"/>
+  <text x="542" y="342" font-size="11" fill="#333">└ calcular_total_pedido</text>
+  <rect x="733" y="332" width="5" height="11" rx="2" fill="#4285f4"/>
+  <text x="542" y="362" font-size="11" fill="#333">└ reservar_inventario_remoto</text>
+  <rect x="738" y="352" width="110" height="11" rx="2" fill="#4285f4"/>
+  <text x="552" y="382" font-size="11" fill="#333">└ POST /inventory/reserve</text>
+  <rect x="750" y="372" width="90" height="11" rx="2" fill="#ff9900"/>
+  <text x="562" y="402" font-size="11" fill="#333">└ reservar_inventario</text>
+  <rect x="768" y="392" width="40" height="11" rx="2" fill="#ff9900"/>
+  <text x="572" y="422" font-size="11" fill="#333">└ verificar_existencias / aplicar_reserva</text>
+  <rect x="790" y="412" width="18" height="11" rx="2" fill="#ff9900"/>
+
+  <text x="516" y="466" font-size="12.5" font-weight="bold" fill="#4b338f">Atributos del span de negocio</text>
+  <text x="522" y="488" font-size="11" font-family="Consolas, monospace" fill="#333">ecommerce.order.id = ord-10dc0f85abb5</text>
+  <text x="522" y="506" font-size="11" font-family="Consolas, monospace" fill="#333">ecommerce.customer.tier = silver</text>
+  <text x="522" y="524" font-size="11" font-family="Consolas, monospace" fill="#333">ecommerce.payment.result = authorized</text>
+  <text x="522" y="542" font-size="11" font-family="Consolas, monospace" fill="#333">ecommerce.checkout.step = order_submit</text>
+  <text x="522" y="560" font-size="11" font-family="Consolas, monospace" fill="#333">enduser.id = cli-007</text>
+
+  <rect x="516" y="580" width="388" height="84" rx="6" fill="#f0ecf9" stroke="#7a5cc4" stroke-dasharray="4 3"/>
+  <text x="526" y="602" font-size="12" font-weight="bold" fill="#4b338f">Como se logra</text>
+  <text x="526" y="622" font-size="11.5" fill="#333">service-a envia la cabecera traceparent del W3C</text>
+  <text x="526" y="640" font-size="11.5" fill="#333">y service-b la lee, asi que no crea una traza nueva</text>
+  <text x="526" y="656" font-size="11" fill="#666">TraceContextTextMapPropagator + HTTPXClientInstrumentor</text>
+
+  <!-- ============ 3. METRICAS ============ -->
+  <rect x="970" y="200" width="420" height="480" rx="10" fill="#f2faf5" stroke="#2e9e63" stroke-width="2"/>
+  <text x="1180" y="228" text-anchor="middle" font-size="16" font-weight="bold" fill="#1f6b41">3. METRICAS</text>
+  <text x="1180" y="248" text-anchor="middle" font-size="11.5" fill="#555">formato Prometheus en :9464/metrics</text>
+
+  <rect x="986" y="262" width="388" height="150" rx="6" fill="#ffffff" stroke="#a8d6bd"/>
+  <text x="996" y="284" font-size="12" font-weight="bold" fill="#1f6b41">de negocio, escritas a mano</text>
+  <text x="996" y="304" font-size="10.5" font-family="Consolas, monospace" fill="#333">ecommerce_orders_created_total</text>
+  <text x="996" y="321" font-size="10.5" font-family="Consolas, monospace" fill="#333">ecommerce_checkout_duration_seconds</text>
+  <text x="996" y="338" font-size="10.5" font-family="Consolas, monospace" fill="#333">ecommerce_order_amount</text>
+  <text x="996" y="355" font-size="10.5" font-family="Consolas, monospace" fill="#333">inventory_reservations_total</text>
+  <text x="996" y="372" font-size="10.5" font-family="Consolas, monospace" fill="#333">inventory_reserve_duration_seconds</text>
+  <text x="996" y="389" font-size="10.5" font-family="Consolas, monospace" fill="#333">inventory_stock_level</text>
+  <text x="996" y="406" font-size="10.5" fill="#666">verificadas en el endpoint del servicio</text>
+
+  <rect x="986" y="424" width="388" height="108" rx="6" fill="#ffffff" stroke="#a8d6bd"/>
+  <text x="996" y="446" font-size="12" font-weight="bold" fill="#1f6b41">derivadas de los spans por el Collector</text>
+  <text x="996" y="466" font-size="10.5" font-family="Consolas, monospace" fill="#333">otel_demo_calls_total</text>
+  <text x="996" y="483" font-size="10.5" font-family="Consolas, monospace" fill="#333">otel_demo_duration_milliseconds_bucket</text>
+  <text x="996" y="502" font-size="11" fill="#444">Salen del conector spanmetrics, o sea del</text>
+  <text x="996" y="519" font-size="11" fill="#444">100 por ciento de los spans. Alimentan los SLI.</text>
+
+  <rect x="986" y="548" width="388" height="116" rx="6" fill="#eaf6ef" stroke="#2e9e63" stroke-dasharray="4 3"/>
+  <text x="996" y="570" font-size="12" font-weight="bold" fill="#1f6b41">El puente hacia las trazas</text>
+  <text x="996" y="590" font-size="11.5" fill="#333">Las metricas no llevan trace_id porque serian de</text>
+  <text x="996" y="608" font-size="11.5" fill="#333">cardinalidad infinita. El enlace se hace por dos vias:</text>
+  <text x="1002" y="628" font-size="11.5" fill="#444">atributos de recurso comunes (service.name)</text>
+  <text x="1002" y="646" font-size="11.5" fill="#444">y exemplars, que si guardan un trace_id de ejemplo</text>
+
+  <!-- flujo de navegacion -->
+  <rect x="30" y="700" width="1360" height="150" rx="10" fill="#fafafa" stroke="#ccc"/>
+  <text x="46" y="726" font-size="14" font-weight="bold" fill="#333">Como se usa en la practica: el recorrido de una alerta</text>
+
+  <rect x="46" y="742" width="250" height="88" rx="6" fill="#ffffff" stroke="#2e9e63"/>
+  <text x="60" y="764" font-size="12" font-weight="bold" fill="#1f6b41">1. Salta una alerta</text>
+  <text x="60" y="784" font-size="11" fill="#444">El panel de latencia p99 supera</text>
+  <text x="60" y="801" font-size="11" fill="#444">el umbral. Viene de metricas,</text>
+  <text x="60" y="818" font-size="11" fill="#444">que se calculan sobre todo.</text>
+
+  <text x="308" y="792" font-size="20" fill="#c0392b">→</text>
+
+  <rect x="336" y="742" width="250" height="88" rx="6" fill="#ffffff" stroke="#7a5cc4"/>
+  <text x="350" y="764" font-size="12" font-weight="bold" fill="#4b338f">2. Abre un ejemplo</text>
+  <text x="350" y="784" font-size="11" fill="#444">El exemplar del histograma</text>
+  <text x="350" y="801" font-size="11" fill="#444">lleva a una traza concreta</text>
+  <text x="350" y="818" font-size="11" fill="#444">de las que superaron el umbral.</text>
+
+  <text x="598" y="792" font-size="20" fill="#c0392b">→</text>
+
+  <rect x="626" y="742" width="250" height="88" rx="6" fill="#ffffff" stroke="#7a5cc4"/>
+  <text x="640" y="764" font-size="12" font-weight="bold" fill="#4b338f">3. Ve donde se fue el tiempo</text>
+  <text x="640" y="784" font-size="11" fill="#444">La cascada muestra que el 56%</text>
+  <text x="640" y="801" font-size="11" fill="#444">del tiempo esta en la llamada</text>
+  <text x="640" y="818" font-size="11" fill="#444">a service-b.</text>
+
+  <text x="888" y="792" font-size="20" fill="#c0392b">→</text>
+
+  <rect x="916" y="742" width="250" height="88" rx="6" fill="#ffffff" stroke="#4285f4"/>
+  <text x="930" y="764" font-size="12" font-weight="bold" fill="#1a5fb4">4. Lee los logs de esa traza</text>
+  <text x="930" y="784" font-size="11" fill="#444">Un clic en la traza filtra los</text>
+  <text x="930" y="801" font-size="11" fill="#444">logs por trace_id y muestra</text>
+  <text x="930" y="818" font-size="11" fill="#444">las 5 lineas de esa peticion.</text>
+
+  <text x="1178" y="792" font-size="20" fill="#c0392b">→</text>
+
+  <rect x="1206" y="742" width="168" height="88" rx="6" fill="#fdeceb" stroke="#c0392b"/>
+  <text x="1220" y="764" font-size="12" font-weight="bold" fill="#8b2520">5. Causa identificada</text>
+  <text x="1220" y="784" font-size="11" fill="#444">Sin cambiar de herramienta</text>
+  <text x="1220" y="801" font-size="11" fill="#444">ni buscar a mano por</text>
+  <text x="1220" y="818" font-size="11" fill="#444">marca de tiempo.</text>
+</svg>

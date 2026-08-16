@@ -1,0 +1,218 @@
+{
+  "title": "Observabilidad OTel: service-a y service-b",
+  "uid": "otel-demo-obs",
+  "tags": ["opentelemetry", "sli", "demo"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "servicio",
+        "label": "Servicio",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "query": "label_values(otel_demo_calls_total, service_name)",
+        "includeAll": true,
+        "multi": true,
+        "current": { "text": "All", "value": "$__all" }
+      },
+      {
+        "name": "trace_id",
+        "label": "Trace ID (pivote a logs y trazas)",
+        "type": "textbox",
+        "query": "",
+        "current": { "text": "", "value": "" }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "SLI 1. Tasa de peticiones por segundo",
+      "description": "Throughput por servicio y por ruta. Sale del conector spanmetrics del Collector, o sea del 100% de los spans.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 10 } }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (service_name, http_route) (rate(otel_demo_calls_total{service_name=~\"$servicio\"}[5m]))",
+          "legendFormat": "{{service_name}} {{http_route}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "SLI 2. Tasa de error",
+      "description": "Porcentaje de peticiones con codigo 5xx. El umbral de 1 por ciento marca el presupuesto de error.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 0.01 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (service_name) (rate(otel_demo_calls_total{service_name=~\"$servicio\", status_code=\"STATUS_CODE_ERROR\"}[5m])) / clamp_min(sum by (service_name) (rate(otel_demo_calls_total{service_name=~\"$servicio\"}[5m])), 0.001)",
+          "legendFormat": "{{service_name}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "SLI 3. Latencia p50, p95 y p99",
+      "description": "Percentiles calculados sobre el histograma de duracion que produce spanmetrics.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum by (le, service_name) (rate(otel_demo_duration_milliseconds_bucket{service_name=~\"$servicio\"}[5m])))",
+          "legendFormat": "p50 {{service_name}}"
+        },
+        {
+          "refId": "B",
+          "expr": "histogram_quantile(0.95, sum by (le, service_name) (rate(otel_demo_duration_milliseconds_bucket{service_name=~\"$servicio\"}[5m])))",
+          "legendFormat": "p95 {{service_name}}"
+        },
+        {
+          "refId": "C",
+          "expr": "histogram_quantile(0.99, sum by (le, service_name) (rate(otel_demo_duration_milliseconds_bucket{service_name=~\"$servicio\"}[5m])))",
+          "legendFormat": "p99 {{service_name}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "SLI 4. Pedidos confirmados y rechazados",
+      "description": "Metrica de negocio propia. Sale de los contadores ecommerce.orders.created y ecommerce.orders.failed del SDK.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (tier) (rate(ecommerce_orders_created_total[5m]))",
+          "legendFormat": "confirmados tier {{tier}}"
+        },
+        {
+          "refId": "B",
+          "expr": "sum by (motivo) (rate(ecommerce_orders_failed_total[5m]))",
+          "legendFormat": "fallidos {{motivo}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "CPU y memoria de los servicios",
+      "description": "Consumo de los contenedores de aplicacion. Es la base del analisis de overhead de la Fase 4.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (pod) (rate(container_cpu_usage_seconds_total{namespace=\"demo\", container=~\"service-.*\"}[5m]))",
+          "legendFormat": "CPU cores {{pod}}"
+        },
+        {
+          "refId": "B",
+          "expr": "sum by (pod) (container_memory_working_set_bytes{namespace=\"demo\", container=~\"service-.*\"}) / 1024 / 1024",
+          "legendFormat": "memoria MB {{pod}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Salud del OTel Collector",
+      "description": "Spans aceptados frente a spans rechazados o descartados. Si la linea de fallos sube, el pipeline esta perdiendo telemetria.",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(rate(otelcol_receiver_accepted_spans_total[5m]))",
+          "legendFormat": "spans aceptados"
+        },
+        {
+          "refId": "B",
+          "expr": "sum(rate(otelcol_receiver_refused_spans_total[5m]))",
+          "legendFormat": "spans rechazados"
+        },
+        {
+          "refId": "C",
+          "expr": "sum(rate(otelcol_exporter_send_failed_spans_total[5m]))",
+          "legendFormat": "fallos de exportacion"
+        },
+        {
+          "refId": "D",
+          "expr": "sum(rate(otelcol_processor_dropped_spans_total[5m]))",
+          "legendFormat": "spans descartados"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Correlacion. Logs de la traza seleccionada",
+      "description": "Escriba un trace_id en la variable de arriba. Este panel filtra los logs de los dos servicios por ese identificador y cada linea enlaza con la traza en Jaeger.",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 24 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": { "showTime": true, "wrapLogMessage": true, "dedupStrategy": "none" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{namespace=\"demo\"} | json | trace_id = \"$trace_id\"",
+          "queryType": "range"
+        }
+      ]
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "name": "Despliegues",
+        "datasource": { "type": "prometheus", "uid": "prometheus" },
+        "enable": true,
+        "expr": "changes(kube_deployment_status_observed_generation{namespace=\"demo\"}[5m]) > 0",
+        "iconColor": "blue"
+      }
+    ]
+  }
+}

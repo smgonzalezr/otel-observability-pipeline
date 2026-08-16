@@ -1,0 +1,34 @@
+# Valores por defecto. Se sobreescriben con values-gcp.yaml o values-aws.yaml.
+nube: gcp                       # gcp | aws
+modoDespliegue: daemonset       # daemonset | deployment
+
+imagen:
+  repositorio: otel/opentelemetry-collector-contrib
+  etiqueta: "0.113.0"
+  politica: IfNotPresent
+
+replicas: 2
+
+recursos:
+  requests:
+    cpu: 200m
+    memory: 400Mi
+  limits:
+    cpu: "1"
+    memory: 800Mi
+
+serviceAccount:
+  crear: true
+  nombre: otel-collector
+  anotaciones: {}
+
+puertos:
+  otlpGrpc: 4317
+  otlpHttp: 4318
+  metricasExportadas: 8889
+  metricasInternas: 8888
+  salud: 13133
+
+# El contenido real de config.yaml lo inyecta el ConfigMap del template,
+# que lee el archivo de collector/ segun la nube.
+configuracion: ""

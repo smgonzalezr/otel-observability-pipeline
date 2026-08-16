@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="786" viewBox="0 0 1020 786" font-family="Helvetica, Arial, sans-serif">
+<rect width="1020" height="786" fill="#ffffff"/>
+<text x="22" y="30" font-size="16" font-weight="bold" fill="#111">Traza completa del flujo de compra</text>
+<text x="22" y="52" font-size="12.5" fill="#444">trace_id aef4e2c82298fb222f881f25b2383bd3  ·  20 spans  ·  37.97 ms  ·  2 servicios</text>
+<rect x="22" y="66" width="13" height="13" rx="2" fill="#4285f4"/>
+<text x="41" y="77" font-size="12" fill="#333">service-a</text>
+<rect x="152" y="66" width="13" height="13" rx="2" fill="#ff9900"/>
+<text x="171" y="77" font-size="12" fill="#333">service-b</text>
+<line x1="322.0" y1="96" x2="322.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="322.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">0.0 ms</text>
+<line x1="434.0" y1="96" x2="434.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="434.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">7.6 ms</text>
+<line x1="546.0" y1="96" x2="546.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="546.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">15.2 ms</text>
+<line x1="658.0" y1="96" x2="658.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="658.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">22.8 ms</text>
+<line x1="770.0" y1="96" x2="770.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="770.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">30.4 ms</text>
+<line x1="882.0" y1="96" x2="882.0" y2="726" stroke="#e8e8e8" stroke-width="1"/>
+<text x="882.0" y="90" font-size="10.5" fill="#888" text-anchor="middle">38.0 ms</text>
+<rect x="16" y="99" width="990" height="30" fill="#fafafa"/>
+<text x="22" y="115" font-size="11.5" fill="#222">POST /checkout</text>
+<rect x="322.0" y="104" width="560.0" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="889.0" y="115" font-size="10.5" fill="#555">37.97 ms</text>
+<text x="35" y="145" font-size="11.5" fill="#222">└ POST /checkout http receive</text>
+<rect x="418.5" y="134" width="2.0" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="427.5" y="145" font-size="10.5" fill="#555">0.03 ms</text>
+<rect x="16" y="159" width="990" height="30" fill="#fafafa"/>
+<text x="35" y="175" font-size="11.5" fill="#222">└ flujo_checkout</text>
+<rect x="499.5" y="164" width="374.4" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="881.0" y="175" font-size="10.5" fill="#555">25.39 ms</text>
+<text x="48" y="205" font-size="11.5" fill="#222">└ SELECT</text>
+<rect x="511.2" y="194" width="4.4" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="522.6" y="205" font-size="10.5" fill="#555">0.30 ms</text>
+<text x="60" y="217" font-size="8.5" fill="#999">SELECT id, nombre, tier, descuento FROM clie…</text>
+<rect x="16" y="219" width="990" height="30" fill="#fafafa"/>
+<text x="48" y="235" font-size="11.5" fill="#222">└ calcular_total_pedido</text>
+<rect x="517.1" y="224" width="2.0" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="526.1" y="235" font-size="10.5" fill="#555">0.07 ms</text>
+<text x="48" y="265" font-size="11.5" fill="#222">└ reservar_inventario_remoto</text>
+<rect x="519.6" y="254" width="313.7" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="840.3" y="265" font-size="10.5" fill="#555">21.27 ms</text>
+<rect x="16" y="279" width="990" height="30" fill="#fafafa"/>
+<text x="61" y="295" font-size="11.5" fill="#222">└ POST</text>
+<rect x="528.3" y="284" width="294.3" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="829.6" y="295" font-size="10.5" fill="#555">19.96 ms</text>
+<text x="74" y="325" font-size="11.5" fill="#222">└ POST /inventory/reserve</text>
+<rect x="560.9" y="314" width="257.1" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="825.1" y="325" font-size="10.5" fill="#555">17.44 ms</text>
+<rect x="16" y="339" width="990" height="30" fill="#fafafa"/>
+<text x="87" y="355" font-size="11.5" fill="#222">└ POST /inventory/reserve http …</text>
+<rect x="642.3" y="344" width="2.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="651.3" y="355" font-size="10.5" fill="#555">0.03 ms</text>
+<text x="87" y="385" font-size="11.5" fill="#222">└ reservar_inventario</text>
+<rect x="696.0" y="374" width="113.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="816.0" y="385" font-size="10.5" fill="#555">7.66 ms</text>
+<rect x="16" y="399" width="990" height="30" fill="#fafafa"/>
+<text x="100" y="415" font-size="11.5" fill="#222">└ verificar_existencias</text>
+<rect x="761.8" y="404" width="8.8" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="777.6" y="415" font-size="10.5" fill="#555">0.59 ms</text>
+<text x="113" y="445" font-size="11.5" fill="#222">└ SELECT</text>
+<rect x="766.1" y="434" width="3.7" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="776.9" y="445" font-size="10.5" fill="#555">0.25 ms</text>
+<text x="125" y="457" font-size="8.5" fill="#999">SELECT sku, nombre, existencias, bodega FROM…</text>
+<rect x="16" y="459" width="990" height="30" fill="#fafafa"/>
+<text x="100" y="475" font-size="11.5" fill="#222">└ aplicar_reserva</text>
+<rect x="771.1" y="464" width="32.6" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="810.7" y="475" font-size="10.5" fill="#555">2.21 ms</text>
+<text x="113" y="505" font-size="11.5" fill="#222">└ UPDATE</text>
+<rect x="773.8" y="494" width="3.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="783.9" y="505" font-size="10.5" fill="#555">0.21 ms</text>
+<text x="125" y="517" font-size="8.5" fill="#999">UPDATE inventario SET existencias = existenc…</text>
+<rect x="16" y="519" width="990" height="30" fill="#fafafa"/>
+<text x="113" y="535" font-size="11.5" fill="#222">└ INSERT</text>
+<rect x="777.5" y="524" width="2.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="786.5" y="535" font-size="10.5" fill="#555">0.06 ms</text>
+<text x="125" y="547" font-size="8.5" fill="#999">INSERT INTO reservas VALUES (?,?,?,?,?)</text>
+<text x="87" y="565" font-size="11.5" fill="#222">└ POST /inventory/reserve http …</text>
+<rect x="813.2" y="554" width="2.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="822.2" y="565" font-size="10.5" fill="#555">0.03 ms</text>
+<rect x="16" y="579" width="990" height="30" fill="#fafafa"/>
+<text x="87" y="595" font-size="11.5" fill="#222">└ POST /inventory/reserve http …</text>
+<rect x="816.8" y="584" width="2.0" height="13" rx="2.5" fill="#ff9900" opacity="0.88"/>
+<text x="825.8" y="595" font-size="10.5" fill="#555">0.01 ms</text>
+<text x="48" y="625" font-size="11.5" fill="#222">└ INSERT</text>
+<rect x="837.0" y="614" width="3.3" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="847.3" y="625" font-size="10.5" fill="#555">0.23 ms</text>
+<text x="60" y="637" font-size="8.5" fill="#999">INSERT INTO pedidos VALUES (?,?,?,?,?)</text>
+<rect x="16" y="639" width="990" height="30" fill="#fafafa"/>
+<text x="35" y="655" font-size="11.5" fill="#222">└ POST /checkout http send</text>
+<rect x="877.8" y="644" width="2.0" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="886.8" y="655" font-size="10.5" fill="#555">0.03 ms</text>
+<text x="35" y="685" font-size="11.5" fill="#222">└ POST /checkout http send</text>
+<rect x="880.9" y="674" width="2.0" height="13" rx="2.5" fill="#4285f4" opacity="0.88"/>
+<text x="889.9" y="685" font-size="10.5" fill="#555">0.01 ms</text>
+<line x1="22" y1="734" x2="990" y2="734" stroke="#ddd"/>
+<text x="22" y="754" font-size="11" fill="#444">El contexto viaja en la cabecera traceparent del W3C, por eso los spans de service-b cuelgan de los de service-a</text>
+<text x="22" y="770" font-size="11" fill="#444">y los 20 spans quedan en una sola traza. Datos exportados por OTLP y capturados en el receptor del Collector.</text>
+</svg>

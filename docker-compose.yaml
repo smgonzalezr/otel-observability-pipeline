@@ -1,0 +1,118 @@
+# =============================================================================
+# Stack completo en local. Levanta lo mismo que hay en las dos nubes, pero
+# en una sola maquina, para poder tomar las capturas de Jaeger y de Grafana.
+#
+#   docker compose up -d
+#   Jaeger   http://localhost:16686
+#   Grafana  http://localhost:3000   (admin / admin)
+#   Prometheus http://localhost:9090
+# =============================================================================
+
+services:
+  # ------------------------------------------------------------ aplicacion
+  service-a:
+    build:
+      context: .
+      dockerfile: services/service-a/Dockerfile
+    ports:
+      - "8001:8001"
+      - "9464:9464"
+    environment:
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: service-a
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SAMPLE_RATIO: "1.0"
+      SERVICE_B_URL: http://service-b:8002
+      DEPLOYMENT_ENV: local
+      PORT: "8001"
+      METRICS_PORT: "9464"
+    depends_on:
+      - otel-collector
+      - service-b
+
+  service-b:
+    build:
+      context: .
+      dockerfile: services/service-b/Dockerfile
+    ports:
+      - "8002:8002"
+      - "9465:9464"
+    environment:
+      OTEL_ENABLED: "true"
+      OTEL_SERVICE_NAME: service-b
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      OTEL_SAMPLE_RATIO: "1.0"
+      DEPLOYMENT_ENV: local
+      PORT: "8002"
+      METRICS_PORT: "9464"
+    depends_on:
+      - otel-collector
+
+  # ------------------------------------------------------------- collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.113.0
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes:
+      - ./collector/otel-collector-local.yaml:/etc/otel/config.yaml:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8889:8889"   # metricas para Prometheus
+      - "8888:8888"   # metricas internas del Collector
+      - "13133:13133" # salud
+    depends_on:
+      - jaeger
+      - loki
+
+  # -------------------------------------------------------------- backends
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"  # interfaz web
+      - "14317:4317"   # OTLP gRPC del propio Jaeger
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-remote-write-receiver
+    volumes:
+      - ./dashboards/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+
+  loki:
+    image: grafana/loki:3.3.2
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+
+  # Lee los logs JSON de los contenedores y los manda a Loki.
+  promtail:
+    image: grafana/promtail:3.3.2
+    command: -config.file=/etc/promtail/config.yaml
+    volumes:
+      - ./dashboards/promtail.yml:/etc/promtail/config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:11.4.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_FEATURE_TOGGLES_ENABLE: traceToMetrics
+    volumes:
+      - ./dashboards/grafana-datasources.yml:/etc/grafana/provisioning/datasources/ds.yml:ro
+      - ./dashboards/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/db.yml:ro
+      - ./dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+      - jaeger

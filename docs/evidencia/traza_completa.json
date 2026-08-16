@@ -1,0 +1,348 @@
+[
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "2fbb4946523f9cd3",
+    "parent_span_id": "8ad81f8ca820f5c2",
+    "name": "POST /inventory/reserve http receive",
+    "kind": 1,
+    "start": 1786911117161185736,
+    "end": 1786911117161212986,
+    "duration_ms": 0.02725,
+    "service.name": "service-b",
+    "attributes": {
+      "asgi.event.type": "http.request"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "6e2b50f450f2efbd",
+    "parent_span_id": "8ad81f8ca820f5c2",
+    "name": "POST /inventory/reserve http send",
+    "kind": 1,
+    "start": 1786911117172774944,
+    "end": 1786911117172800486,
+    "duration_ms": 0.025542,
+    "service.name": "service-b",
+    "attributes": {
+      "asgi.event.type": "http.response.start",
+      "http.status_code": 200
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "5316110fef74bcb1",
+    "parent_span_id": "8ad81f8ca820f5c2",
+    "name": "POST /inventory/reserve http send",
+    "kind": 1,
+    "start": 1786911117173022153,
+    "end": 1786911117173032486,
+    "duration_ms": 0.010333,
+    "service.name": "service-b",
+    "attributes": {
+      "asgi.event.type": "http.response.body"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "8ad81f8ca820f5c2",
+    "parent_span_id": "c02401f51f225aeb",
+    "name": "POST /inventory/reserve",
+    "kind": 2,
+    "start": 1786911117155669528,
+    "end": 1786911117173105194,
+    "duration_ms": 17.435666,
+    "service.name": "service-b",
+    "attributes": {
+      "http.scheme": "http",
+      "http.host": "127.0.0.1:8002",
+      "net.host.port": 8002,
+      "http.flavor": "1.1",
+      "http.target": "/inventory/reserve",
+      "http.url": "http://localhost:8002/inventory/reserve",
+      "http.method": "POST",
+      "http.server_name": "localhost:8002",
+      "http.user_agent": "python-httpx/0.28.1",
+      "net.peer.ip": "127.0.0.1",
+      "net.peer.port": 53158,
+      "http.route": "/inventory/reserve",
+      "http.status_code": 200
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "72dbd37d7f72bdf2",
+    "parent_span_id": "69c327da0c7a4424",
+    "name": "SELECT",
+    "kind": 3,
+    "start": 1786911117169585361,
+    "end": 1786911117169837111,
+    "duration_ms": 0.25175,
+    "service.name": "service-b",
+    "attributes": {
+      "db.system": "sqlite",
+      "db.statement": "SELECT sku, nombre, existencias, bodega FROM inventario WHERE sku = ?"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "cc8288ee3a13f0f3",
+    "parent_span_id": "ec17a9d1edcea417",
+    "name": "UPDATE",
+    "kind": 3,
+    "start": 1786911117170106861,
+    "end": 1786911117170312611,
+    "duration_ms": 0.20575,
+    "service.name": "service-b",
+    "attributes": {
+      "db.system": "sqlite",
+      "db.statement": "UPDATE inventario SET existencias = existencias - ? WHERE sku = ?"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "2ab161db812a7534",
+    "parent_span_id": "ec17a9d1edcea417",
+    "name": "INSERT",
+    "kind": 3,
+    "start": 1786911117170353903,
+    "end": 1786911117170416819,
+    "duration_ms": 0.062916,
+    "service.name": "service-b",
+    "attributes": {
+      "db.system": "sqlite",
+      "db.statement": "INSERT INTO reservas VALUES (?,?,?,?,?)"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "69c327da0c7a4424",
+    "parent_span_id": "3d99ff42b7eedc87",
+    "name": "verificar_existencias",
+    "kind": 1,
+    "start": 1786911117169293653,
+    "end": 1786911117169887653,
+    "duration_ms": 0.594,
+    "service.name": "service-b",
+    "attributes": {
+      "ecommerce.inventory.sku": "SKU-1021",
+      "ecommerce.inventory.available": 100000,
+      "ecommerce.inventory.warehouse_id": "bodega-1"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "ec17a9d1edcea417",
+    "parent_span_id": "3d99ff42b7eedc87",
+    "name": "aplicar_reserva",
+    "kind": 1,
+    "start": 1786911117169921444,
+    "end": 1786911117172130111,
+    "duration_ms": 2.208667,
+    "service.name": "service-b",
+    "attributes": {
+      "ecommerce.reservation.id": "rsv-25f810e1c3"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "3d99ff42b7eedc87",
+    "parent_span_id": "8ad81f8ca820f5c2",
+    "name": "reservar_inventario",
+    "kind": 1,
+    "start": 1786911117164831819,
+    "end": 1786911117172490819,
+    "duration_ms": 7.659,
+    "service.name": "service-b",
+    "attributes": {
+      "ecommerce.inventory.sku": "SKU-1021",
+      "ecommerce.order.id": "ord-10dc0f85abb5",
+      "ecommerce.cart.item_count": 2,
+      "ecommerce.inventory.result": "reservado"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "06d6ea88779ad452",
+    "parent_span_id": "c0fbc65eb0983123",
+    "name": "POST /checkout http receive",
+    "kind": 1,
+    "start": 1786911117146016153,
+    "end": 1786911117146044444,
+    "duration_ms": 0.028291,
+    "service.name": "service-a",
+    "attributes": {
+      "asgi.event.type": "http.request"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "57541d7b9d59d0de",
+    "parent_span_id": "c0fbc65eb0983123",
+    "name": "POST /checkout http send",
+    "kind": 1,
+    "start": 1786911117177155694,
+    "end": 1786911117177185278,
+    "duration_ms": 0.029584,
+    "service.name": "service-a",
+    "attributes": {
+      "asgi.event.type": "http.response.start",
+      "http.status_code": 200
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "67136e0eccda565e",
+    "parent_span_id": "c0fbc65eb0983123",
+    "name": "POST /checkout http send",
+    "kind": 1,
+    "start": 1786911117177363111,
+    "end": 1786911117177371653,
+    "duration_ms": 0.008542,
+    "service.name": "service-a",
+    "attributes": {
+      "asgi.event.type": "http.response.body"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "c0fbc65eb0983123",
+    "parent_span_id": "",
+    "name": "POST /checkout",
+    "kind": 2,
+    "start": 1786911117139469569,
+    "end": 1786911117177440861,
+    "duration_ms": 37.971292,
+    "service.name": "service-a",
+    "attributes": {
+      "http.scheme": "http",
+      "http.host": "127.0.0.1:8001",
+      "net.host.port": 8001,
+      "http.flavor": "1.1",
+      "http.target": "/checkout",
+      "http.url": "http://localhost:8001/checkout",
+      "http.method": "POST",
+      "http.server_name": "localhost:8001",
+      "http.user_agent": "curl/7.81.0",
+      "net.peer.ip": "127.0.0.1",
+      "net.peer.port": 54986,
+      "http.route": "/checkout",
+      "http.status_code": 200
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "389548bcb7f823c7",
+    "parent_span_id": "b36bf8543506e168",
+    "name": "SELECT",
+    "kind": 3,
+    "start": 1786911117152296153,
+    "end": 1786911117152597236,
+    "duration_ms": 0.301083,
+    "service.name": "service-a",
+    "attributes": {
+      "db.system": "sqlite",
+      "db.statement": "SELECT id, nombre, tier, descuento FROM clientes WHERE id = ?"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "16031b0607d19f88",
+    "parent_span_id": "b36bf8543506e168",
+    "name": "INSERT",
+    "kind": 3,
+    "start": 1786911117174388361,
+    "end": 1786911117174614319,
+    "duration_ms": 0.225958,
+    "service.name": "service-a",
+    "attributes": {
+      "db.system": "sqlite",
+      "db.statement": "INSERT INTO pedidos VALUES (?,?,?,?,?)"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "9812c47c946d1542",
+    "parent_span_id": "b36bf8543506e168",
+    "name": "calcular_total_pedido",
+    "kind": 1,
+    "start": 1786911117152700069,
+    "end": 1786911117152768361,
+    "duration_ms": 0.068292,
+    "service.name": "service-a",
+    "attributes": {
+      "ecommerce.order.subtotal": 90000.0,
+      "ecommerce.order.discount_rate": 0.05,
+      "ecommerce.order.total_amount": 85500.0,
+      "ecommerce.order.currency": "COP",
+      "ecommerce.cart.item_count": 2
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "a40ebf887a406103",
+    "parent_span_id": "b36bf8543506e168",
+    "name": "reservar_inventario_remoto",
+    "kind": 1,
+    "start": 1786911117152868194,
+    "end": 1786911117174137778,
+    "duration_ms": 21.269584,
+    "service.name": "service-a",
+    "attributes": {
+      "peer.service": "service-b"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "b36bf8543506e168",
+    "parent_span_id": "c0fbc65eb0983123",
+    "name": "flujo_checkout",
+    "kind": 1,
+    "start": 1786911117151507819,
+    "end": 1786911117176897028,
+    "duration_ms": 25.389209,
+    "service.name": "service-a",
+    "attributes": {
+      "ecommerce.order.id": "ord-10dc0f85abb5",
+      "enduser.id": "cli-007",
+      "ecommerce.customer.tier": "silver",
+      "ecommerce.payment.result": "authorized",
+      "ecommerce.checkout.step": "order_submit"
+    },
+    "status": 0
+  },
+  {
+    "trace_id": "aef4e2c82298fb222f881f25b2383bd3",
+    "span_id": "c02401f51f225aeb",
+    "parent_span_id": "a40ebf887a406103",
+    "name": "POST",
+    "kind": 3,
+    "start": 1786911117153457486,
+    "end": 1786911117173415944,
+    "duration_ms": 19.958458,
+    "service.name": "service-a",
+    "attributes": {
+      "http.method": "POST",
+      "http.url": "http://localhost:8002/inventory/reserve",
+      "http.status_code": 200
+    },
+    "status": 0
+  }
+]

@@ -1,0 +1,23 @@
+nube: aws
+modoDespliegue: deployment
+replicas: 2
+
+serviceAccount:
+  crear: true
+  nombre: otel-collector
+  anotaciones:
+    eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/otel-demo-tarea
+
+variablesEntorno:
+  - nombre: AWS_REGION
+    valor: us-east-1
+  - nombre: GOGC
+    valor: "80"
+
+recursos:
+  requests:
+    cpu: 300m
+    memory: 500Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi

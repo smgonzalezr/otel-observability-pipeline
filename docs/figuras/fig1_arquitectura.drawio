@@ -1,0 +1,205 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Figura 1. Pipeline de observabilidad" id="d1">
+    <mxGraphModel dx="1434" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c1" value="Pipeline de observabilidad end to end con OpenTelemetry" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=18;fontColor=#111111;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="20" y="12" width="900" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="service-a &amp;#8594; service-b  &amp;#183;  GCP GKE y AWS ECS Fargate  &amp;#183; trazas, metricas y logs unidos por trace_id" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=12;fontColor=#555555;fontStyle=0" parent="1" vertex="1">
+          <mxGeometry x="20" y="38" width="1100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="fase1" value="FASE 1. Aplicacion + OTel SDK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4f8fb;strokeColor=#1a5fb4;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#1a5fb4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="20" y="70" width="340" height="800" as="geometry" />
+        </mxCell>
+        <mxCell id="service_a" value="service-a (Python, FastAPI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4285f4;strokeWidth=2;verticalAlign=top;align=center;fontSize=14;fontStyle=1;fontColor=#4285f4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase1" vertex="1">
+          <mxGeometry x="16" y="34" width="308" height="236" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="POST /checkout" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=11;fontColor=#333333;fontStyle=0" parent="service_a" vertex="1">
+          <mxGeometry x="12" y="30" width="284" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="&lt;b&gt;Auto instrumentacion&lt;/b&gt;&lt;br&gt;FastAPIInstrumentor (HTTP servidor)&lt;br&gt;HTTPXClientInstrumentor (HTTP cliente)&lt;br&gt;SQLite3Instrumentor (base de datos)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef4ff;strokeColor=#4285f4;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="service_a" vertex="1">
+          <mxGeometry x="12" y="52" width="284" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" value="&lt;b&gt;Spans propios de negocio&lt;/b&gt;&lt;br&gt;flujo_checkout&lt;br&gt;calcular_total_pedido&lt;br&gt;reservar_inventario_remoto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff6e5;strokeColor=#e8a33d;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="service_a" vertex="1">
+          <mxGeometry x="12" y="144" width="284" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="service_b" value="service-b (Python, FastAPI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ff9900;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#ff9900;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase1" vertex="1">
+          <mxGeometry x="16" y="288" width="308" height="224" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" value="POST /inventory/reserve" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=11;fontColor=#333333;fontStyle=0" parent="service_b" vertex="1">
+          <mxGeometry x="12" y="30" width="284" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;Auto instrumentacion&lt;/b&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;FastAPI + SQLite3&lt;br style=&quot;font-size: 12px;&quot;&gt;lee la cabecera traceparent entrante" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff9900;verticalAlign=top;align=left;fontSize=12;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="service_b" vertex="1">
+          <mxGeometry x="12" y="52" width="284" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;Spans propios de negocio&lt;/b&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;reservar_inventario&lt;br style=&quot;font-size: 12px;&quot;&gt;verificar_existencias&lt;br style=&quot;font-size: 12px;&quot;&gt;aplicar_reserva" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff6e5;strokeColor=#e8a33d;verticalAlign=top;align=left;fontSize=12;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="service_b" vertex="1">
+          <mxGeometry x="12" y="128" width="284" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="c9" value="Los tres pilares que emite el SDK" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e9e63;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#2e9e63;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase1" vertex="1">
+          <mxGeometry x="16" y="530" width="308" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="c10" value="&lt;b&gt;Trazas&lt;/b&gt;&lt;br&gt;OTLP/gRPC al Collector, puerto 4317&lt;br&gt;Sampler: ParentBased(AlwaysOn)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="c9" vertex="1">
+          <mxGeometry x="12" y="34" width="284" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c11" value="&lt;b&gt;Metricas&lt;/b&gt;&lt;br&gt;PrometheusMetricReader en :9464/metrics&lt;br&gt;ecommerce.orders.created&lt;br&gt;ecommerce.checkout.duration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="c9" vertex="1">
+          <mxGeometry x="12" y="100" width="284" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c12" value="&lt;b&gt;Logs&lt;/b&gt;&lt;br&gt;JSON por salida estandar&lt;br&gt;cada linea lleva trace_id y span_id" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cccccc;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="c9" vertex="1">
+          <mxGeometry x="12" y="178" width="284" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fase2" value="FASE 2. OpenTelemetry Collector" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6f4fb;strokeColor=#4b338f;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#4b338f;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="392" y="70" width="380" height="800" as="geometry" />
+        </mxCell>
+        <mxCell id="c13" value="GCP: DaemonSet en GKE  &amp;#183;  AWS: sidecar en ECS Fargate" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10;fontColor=#4b338f;fontStyle=0" parent="fase2" vertex="1">
+          <mxGeometry x="14" y="26" width="352" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="receivers" value="receivers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7a5cc4;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#7a5cc4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase2" vertex="1">
+          <mxGeometry x="16" y="50" width="348" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="c14" value="otlp / grpc &amp;#8594; 0.0.0.0:4317&lt;br&gt;otlp / http &amp;#8594; 0.0.0.0:4318&lt;br&gt;prometheus/self (metricas internas 8888)&lt;br&gt;&lt;i&gt;awsecscontainermetrics solo en ECS&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="receivers" vertex="1">
+          <mxGeometry x="12" y="30" width="324" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="c15" value="processors (el orden importa)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7a5cc4;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#7a5cc4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase2" vertex="1">
+          <mxGeometry x="16" y="194" width="348" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="c16" value="1. memory_limiter (limit_mib 512)&lt;br&gt;2. k8sattributes / resourcedetection&lt;br&gt;3. resource (cloud.provider, environment)&lt;br&gt;4. batch (timeout 5s, size 1024)&lt;br&gt;&lt;br&gt;&lt;i&gt;memory_limiter primero, batch siempre al final&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c15" vertex="1">
+          <mxGeometry x="12" y="30" width="324" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="connectors" value="connectors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7a5cc4;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#7a5cc4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase2" vertex="1">
+          <mxGeometry x="16" y="364" width="348" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="c17" value="&lt;b&gt;spanmetrics&lt;/b&gt;&lt;br&gt;deriva tasa, error y duracion desde los spans&lt;br&gt;alimenta los SLI 1, 2 y 3 del dashboard&lt;br&gt;&lt;font color=&#39;#c0392b&#39;&gt;se ejecuta sobre el 100% de los spans&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="connectors" vertex="1">
+          <mxGeometry x="12" y="30" width="324" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="exporters" value="exporters" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#7a5cc4;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#7a5cc4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase2" vertex="1">
+          <mxGeometry x="16" y="498" width="348" height="176" as="geometry" />
+        </mxCell>
+        <mxCell id="c18" value="&lt;b&gt;&lt;font color=&#39;#1a5fb4&#39;&gt;en GCP&lt;/font&gt;&lt;/b&gt;&lt;br&gt;otlp/jaeger &amp;#183; googlecloud&lt;br&gt;googlemanagedprometheus &amp;#183; prometheus (8889)&lt;br&gt;&lt;br&gt;&lt;b&gt;&lt;font color=&#39;#b06a00&#39;&gt;en AWS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;awsxray &amp;#183; otlp/tempo &amp;#183; otlp/jaeger&lt;br&gt;awsemf &amp;#183; awscloudwatchlogs &amp;#183; prometheus&lt;br&gt;&lt;i&gt;Es lo unico que cambia entre las dos nubes.&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="exporters" vertex="1">
+          <mxGeometry x="12" y="30" width="324" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="c19" value="&lt;b&gt;Configuracion versionada&lt;/b&gt;&lt;br&gt;GCP: ConfigMap desde collector/otel-collector-gcp.yaml&lt;br&gt;AWS: SSM Parameter desde otel-collector-aws.yaml&lt;br&gt;&lt;i&gt;Los dos los crea Terraform con file(), no a mano.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0ecf9;strokeColor=#7a5cc4;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;dashed=1;" parent="fase2" vertex="1">
+          <mxGeometry x="16" y="688" width="348" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="fase3" value="FASE 3. Backends y visualizacion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2faf5;strokeColor=#1f6b41;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#1f6b41;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="804" y="70" width="776" height="800" as="geometry" />
+        </mxCell>
+        <mxCell id="trazas" value="TRAZAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e9e63;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#2e9e63;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase3" vertex="1">
+          <mxGeometry x="16" y="36" width="380" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="c20" value="&lt;b style=&quot;font-size: 12px;&quot;&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#1a5fb4&quot;&gt;Jaeger UI (GCP)&lt;/font&gt;&lt;/b&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;vista de cascada de los 20 spans&lt;br style=&quot;font-size: 12px;&quot;&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;&lt;b style=&quot;font-size: 12px;&quot;&gt;&lt;font style=&quot;font-size: 12px;&quot; color=&quot;#b06a00&quot;&gt;AWS X-Ray o Tempo (AWS)&lt;/font&gt;&lt;/b&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;mismo trace_id en las dos nubes&lt;br style=&quot;font-size: 12px;&quot;&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;&lt;b style=&quot;font-size: 12px;&quot;&gt;Verificacion de propagacion&lt;/b&gt;&lt;br style=&quot;font-size: 12px;&quot;&gt;una traza, dos servicios, 20 spans&lt;br style=&quot;font-size: 12px;&quot;&gt;los spans de service-b cuelgan de los de service-a" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=12;fontColor=#333333;fontStyle=0" parent="trazas" vertex="1">
+          <mxGeometry x="12" y="34" width="356" height="184" as="geometry" />
+        </mxCell>
+        <mxCell id="metricas" value="METRICAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e9e63;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#2e9e63;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase3" vertex="1">
+          <mxGeometry x="16" y="280" width="380" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="c21" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Prometheus + Grafana&lt;/b&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;raspa el endpoint 8889 del Collector&lt;br style=&quot;font-size: 13px;&quot;&gt;y el 9464 de cada servicio&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;b style=&quot;font-size: 13px;&quot;&gt;Dashboard de 6 paneles&lt;/b&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;4 SLI: rps, error, latencia, negocio&lt;br style=&quot;font-size: 13px;&quot;&gt;1 panel de CPU y memoria&lt;br style=&quot;font-size: 13px;&quot;&gt;1 panel de errores del Collector&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;i style=&quot;font-size: 13px;&quot;&gt;dashboards/grafana-observabilidad.json&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=13;fontColor=#333333;fontStyle=0" parent="metricas" vertex="1">
+          <mxGeometry x="12" y="34" width="356" height="184" as="geometry" />
+        </mxCell>
+        <mxCell id="logs" value="LOGS y CORRELACION" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e9e63;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#2e9e63;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase3" vertex="1">
+          <mxGeometry x="16" y="524" width="380" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="c22" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Destino&lt;/b&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;GCP: Cloud Logging · AWS: CloudWatch Logs · local: Loki&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;b style=&quot;font-size: 13px;&quot;&gt;Pivote: el campo trace_id de cada linea JSON&lt;/b&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;Grafana lo convierte en un enlace con derivedFields, asi que desde un log se abre la traza y desde una traza se filtran sus logs.&lt;br style=&quot;font-size: 13px;&quot;&gt;&lt;br style=&quot;font-size: 13px;&quot;&gt;En GCP el campo logging.googleapis.com/trace hace lo mismo sin configurar nada." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=13;fontColor=#333333;fontStyle=0" parent="logs" vertex="1">
+          <mxGeometry x="12" y="34" width="356" height="204" as="geometry" />
+        </mxCell>
+        <mxCell id="c23" value="FASE 4. Analisis de overhead (medido)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf6f2;strokeColor=#8a4a1e;strokeWidth=2;verticalAlign=top;align=center;fontSize=14;fontStyle=1;fontColor=#8a4a1e;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="fase3" vertex="1">
+          <mxGeometry x="412" y="36" width="348" height="738" as="geometry" />
+        </mxCell>
+        <mxCell id="c24" value="Escenario: 2 repeticiones, 8 usuarios concurrentes, 60 s por corrida, mediana.&lt;br&gt;&lt;br&gt;La latencia se mide desde el cliente, nunca con el instrumento evaluado." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="36" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c25" value="&lt;b&gt;metrica&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; sin OTel&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;con OTel&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;cambio&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="34" y="122" width="320" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c26" value="Latencia p50 (ms)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="150" width="124" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c27" value="19,77" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="140" y="150" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c28" value="30,77" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="204" y="150" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c29" value="+55,6 %" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#c0392b;fontStyle=1" parent="c23" vertex="1">
+          <mxGeometry x="266" y="150" width="68" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c30" value="Latencia p99 (ms)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="176" width="124" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c31" value="155,20" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="140" y="176" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c32" value="159,36" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="204" y="176" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c33" value="+2,7 %" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#c0392b;fontStyle=1" parent="c23" vertex="1">
+          <mxGeometry x="266" y="176" width="68" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c34" value="Throughput (rps)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="202" width="124" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c35" value="268,2" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="140" y="202" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c36" value="197,3" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="204" y="202" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c37" value="-26,5 %" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#c0392b;fontStyle=1" parent="c23" vertex="1">
+          <mxGeometry x="266" y="202" width="68" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c38" value="CPU 2 servicios (%)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="228" width="124" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c39" value="111,2" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="140" y="228" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c40" value="155,6" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="204" y="228" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c41" value="+39,9 %" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#c0392b;fontStyle=1" parent="c23" vertex="1">
+          <mxGeometry x="266" y="228" width="68" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c42" value="Memoria RSS (MB)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#333333;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="254" width="124" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c43" value="96,6" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="140" y="254" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c44" value="150,3" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#444444;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="204" y="254" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c45" value="+55,6 %" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10.5;fontColor=#c0392b;fontStyle=1" parent="c23" vertex="1">
+          <mxGeometry x="266" y="254" width="68" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c46" value="&lt;b&gt;La palanca que sirve&lt;/b&gt;&lt;br&gt;&lt;br&gt;Cada peticion produce 20 spans. El costo no lo genera el agente sino ese volumen.&lt;br&gt;&lt;br&gt;Con muestreo de cabecera al 10 % los spans bajan 88,3 % y el throughput sube de 197 a 220 rps.&lt;br&gt;&lt;br&gt;La memoria casi no baja: cargar el SDK es un costo fijo." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c58f6e;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="c23" vertex="1">
+          <mxGeometry x="14" y="296" width="320" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="c47" value="&lt;b&gt;Lo que sigue&lt;/b&gt;&lt;br&gt;&lt;br&gt;Mover la decision al Collector con muestreo de cola, que conserva el 100 % de los errores porque decide con la traza ya completa.&lt;br&gt;&lt;br&gt;Los SLI no se afectan: salen de spanmetrics, antes del muestreo." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c58f6e;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="c23" vertex="1">
+          <mxGeometry x="14" y="462" width="320" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="c48" value="&lt;i&gt;Datos en benchmark/results/benchmark_results.json. Se reproducen con &lt;b&gt;make benchmark&lt;/b&gt;.&lt;/i&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10;fontColor=#777777;fontStyle=0" parent="c23" vertex="1">
+          <mxGeometry x="14" y="606" width="320" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="f49" value="OTLP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0b6ea8;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#0b6ea8;dashed=0;" parent="1" source="service_a" target="receivers" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f50" value="OTLP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0b6ea8;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#0b6ea8;dashed=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="service_b" target="fase2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f51" value="HTTP con traceparent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#777777;strokeWidth=2;endArrow=none;endFill=0;fontSize=10;fontColor=#777777;dashed=1;exitX=1;exitY=0.85;exitDx=0;exitDy=0;entryX=1;entryY=0.15;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="service_a" target="service_b" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f52" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0b6ea8;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#0b6ea8;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="exporters" target="trazas" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0b6ea8;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#0b6ea8;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="exporters" target="metricas" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#0b6ea8;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#0b6ea8;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="exporters" target="logs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

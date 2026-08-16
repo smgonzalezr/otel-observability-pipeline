@@ -1,0 +1,151 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Figura 3. Correlacion por trace_id" id="d1">
+    <mxGraphModel dx="2607" dy="1544" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1480" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c1" value="Correlacion entre los tres pilares usando trace_id como pivote" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=18;fontColor=#111111;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="30" y="14" width="1000" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="Una sola peticion de compra, capturada en el entorno de pruebas. Los tres bloques comparten el mismo identificador." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=11.5;fontColor=#555555;fontStyle=0" parent="1" vertex="1">
+          <mxGeometry x="30" y="40" width="1200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="pivote" value="&lt;b&gt;trace_id&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-family: Consolas, monospace; font-size: 14px&#39;&gt;aef4e2c82298fb222f881f25b2383bd3&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdeceb;strokeColor=#c0392b;strokeWidth=3;align=center;verticalAlign=middle;fontSize=13;fontColor=#8b2520;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="400" y="74" width="680" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="col_logs" value="1. LOGS ESTRUCTURADOS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4f8fb;strokeColor=#1a5fb4;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#1a5fb4;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="190" width="430" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="salida estandar en JSON, sin campos libres" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10;fontColor=#555555;fontStyle=0" parent="col_logs" vertex="1">
+          <mxGeometry x="14" y="26" width="402" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="&lt;font style=&#39;font-family: Consolas, monospace; font-size: 10px&#39;&gt;{&quot;timestamp&quot;: &quot;...&quot;, &quot;severity&quot;: &quot;INFO&quot;,&lt;br&gt;&amp;#160;&quot;message&quot;: &quot;checkout iniciado&quot;,&lt;br&gt;&amp;#160;&quot;service.name&quot;: &quot;service-a&quot;,&lt;br&gt;&lt;font color=&#39;#c0392b&#39;&gt;&amp;#160;&quot;trace_id&quot;: &quot;aef4e2c822...83bd3&quot;,&lt;/font&gt;&lt;br&gt;&lt;font color=&#39;#c0392b&#39;&gt;&amp;#160;&quot;span_id&quot;: &quot;b36bf8543506e168&quot;,&lt;/font&gt;&lt;br&gt;&amp;#160;&quot;ecommerce.order.id&quot;: &quot;ord-10dc0f85abb5&quot;}&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b9cfe6;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_logs" vertex="1">
+          <mxGeometry x="14" y="50" width="402" height="122" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" value="&lt;b&gt;Las 5 lineas de esta peticion&lt;/b&gt;&lt;br&gt;&lt;br&gt;service-a&amp;#160;&amp;#160; checkout iniciado&lt;br&gt;service-a&amp;#160;&amp;#160; HTTP Request: POST /inventory/reserve&lt;br&gt;service-b&amp;#160;&amp;#160; reserva solicitada&lt;br&gt;service-b&amp;#160;&amp;#160; reserva confirmada&lt;br&gt;service-a&amp;#160;&amp;#160; pedido confirmado&lt;br&gt;&lt;br&gt;&lt;i&gt;Los dos servicios, un solo trace_id.&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b9cfe6;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_logs" vertex="1">
+          <mxGeometry x="14" y="186" width="402" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" value="&lt;b&gt;Como se logra&lt;/b&gt;&lt;br&gt;&lt;br&gt;LoggingInstrumentor con inject_trace_context agrega otelTraceID a cada LogRecord y el formateador propio lo escribe como trace_id.&lt;br&gt;&lt;br&gt;&lt;i&gt;En GCP se agrega ademas logging.googleapis.com/trace&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef4ff;strokeColor=#4285f4;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;dashed=1;" parent="col_logs" vertex="1">
+          <mxGeometry x="14" y="332" width="402" height="122" as="geometry" />
+        </mxCell>
+        <mxCell id="col_trazas" value="2. TRAZAS DISTRIBUIDAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f6f4fb;strokeColor=#4b338f;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#4b338f;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="500" y="190" width="430" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" value="20 spans, 2 servicios, 37,97 ms" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10;fontColor=#555555;fontStyle=0" parent="col_trazas" vertex="1">
+          <mxGeometry x="14" y="26" width="402" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c6b9e0;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_trazas" vertex="1">
+          <mxGeometry x="14" y="50" width="402" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="c9" value="POST /checkout" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="6" y="8" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c10" value="" style="rounded=1;html=1;fillColor=#4285f4;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="196" y="10" width="200" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c11" value="&amp;#8735; flujo_checkout" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="15" y="30" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c12" value="" style="rounded=1;html=1;fillColor=#4285f4;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="225" y="32" width="134" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c13" value="&amp;#8735; SELECT clientes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="24" y="52" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c14" value="" style="rounded=1;html=1;fillColor=#4285f4;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="228" y="54" width="3" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c15" value="&amp;#8735; calcular_total_pedido" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="24" y="74" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c16" value="" style="rounded=1;html=1;fillColor=#4285f4;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="234" y="76" width="2" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c17" value="&amp;#8735; reservar_inventario_remoto" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="24" y="96" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c18" value="" style="rounded=1;html=1;fillColor=#4285f4;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="240" y="98" width="112" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c19" value="&amp;#8735; POST /inventory/reserve" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="33" y="118" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c20" value="" style="rounded=1;html=1;fillColor=#ff9900;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="252" y="120" width="92" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c21" value="&amp;#8735; reservar_inventario" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="42" y="140" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c22" value="" style="rounded=1;html=1;fillColor=#ff9900;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="274" y="142" width="40" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c23" value="&amp;#8735; verificar / aplicar_reserva" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=9.5;fontColor=#333333;fontStyle=0" parent="c8" vertex="1">
+          <mxGeometry x="51" y="162" width="190" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c24" value="" style="rounded=1;html=1;fillColor=#ff9900;strokeColor=none;arcSize=40;" parent="c8" vertex="1">
+          <mxGeometry x="284" y="164" width="20" height="11" as="geometry" />
+        </mxCell>
+        <mxCell id="c25" value="&lt;b&gt;Atributos del span de negocio&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-family: Consolas, monospace; font-size: 10px&#39;&gt;ecommerce.order.id = ord-10dc0f85abb5&lt;br&gt;ecommerce.customer.tier = silver&lt;br&gt;ecommerce.payment.result = authorized&lt;br&gt;ecommerce.checkout.step = order_submit&lt;br&gt;enduser.id = cli-007&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c6b9e0;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_trazas" vertex="1">
+          <mxGeometry x="14" y="252" width="402" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="c26" value="&lt;b&gt;Como se logra&lt;/b&gt;&lt;br&gt;&lt;br&gt;service-a envia la cabecera traceparent del W3C y service-b la lee, asi que no crea una traza nueva.&lt;br&gt;&lt;i&gt;TraceContextTextMapPropagator + HTTPXClientInstrumentor&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0ecf9;strokeColor=#7a5cc4;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;dashed=1;" parent="col_trazas" vertex="1">
+          <mxGeometry x="14" y="380" width="402" height="86" as="geometry" />
+        </mxCell>
+        <mxCell id="col_metricas" value="3. METRICAS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f2faf5;strokeColor=#1f6b41;strokeWidth=2;verticalAlign=top;align=center;fontSize=15;fontStyle=1;fontColor=#1f6b41;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="970" y="190" width="480" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="c27" value="formato Prometheus en :9464/metrics" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;overflow=hidden;fontSize=10;fontColor=#555555;fontStyle=0" parent="col_metricas" vertex="1">
+          <mxGeometry x="14" y="26" width="452" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="c28" value="&lt;b&gt;De negocio, escritas a mano&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-family: Consolas, monospace; font-size: 10px&#39;&gt;ecommerce_orders_created_total&lt;br&gt;ecommerce_checkout_duration_seconds&lt;br&gt;ecommerce_order_amount&lt;br&gt;inventory_reservations_total&lt;br&gt;inventory_reserve_duration_seconds&lt;br&gt;inventory_stock_level&lt;/font&gt;&lt;br&gt;&lt;i&gt;37 series verificadas en el endpoint&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8d6bd;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_metricas" vertex="1">
+          <mxGeometry x="14" y="50" width="452" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="c29" value="&lt;b&gt;Derivadas de los spans por el Collector&lt;/b&gt;&lt;br&gt;&lt;font style=&#39;font-family: Consolas, monospace; font-size: 10px&#39;&gt;otel_demo_calls_total&lt;br&gt;otel_demo_duration_milliseconds_bucket&lt;/font&gt;&lt;br&gt;&lt;br&gt;Salen del conector spanmetrics, o sea del 100% de los spans. Alimentan los SLI." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#a8d6bd;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;" parent="col_metricas" vertex="1">
+          <mxGeometry x="14" y="204" width="452" height="106" as="geometry" />
+        </mxCell>
+        <mxCell id="c30" value="&lt;b&gt;El puente hacia las trazas&lt;/b&gt;&lt;br&gt;&lt;br&gt;Las metricas no llevan trace_id porque serian de cardinalidad infinita. El enlace se hace por dos vias:&lt;br&gt;&amp;#8226; atributos de recurso comunes (service.name)&lt;br&gt;&amp;#8226; exemplars, que si guardan un trace_id de ejemplo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf6ef;strokeColor=#2e9e63;verticalAlign=top;align=left;fontSize=10;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;fontColor=#333333;dashed=1;" parent="col_metricas" vertex="1">
+          <mxGeometry x="14" y="324" width="452" height="132" as="geometry" />
+        </mxCell>
+        <mxCell id="flujo" value="Recorrido de una alerta" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#666666;strokeWidth=2;verticalAlign=top;align=center;fontSize=13;fontStyle=1;fontColor=#666666;arcSize=6;spacingTop=4;container=1;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="30" y="700" width="1420" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;1. Salta una alerta&lt;/b&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;El panel de latencia p99 supera el umbral. Viene de metricas, que se calculan sobre todo." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;align=left;fontSize=15;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;" parent="flujo" vertex="1">
+          <mxGeometry x="16" y="36" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;2. Abre un ejemplo&lt;/b&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;El exemplar del histograma lleva a una traza concreta de las que superaron el umbral." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;align=left;fontSize=15;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;" parent="flujo" vertex="1">
+          <mxGeometry x="298" y="36" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;3. Ve donde se fue el tiempo&lt;/b&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;La cascada muestra que el 56% del tiempo esta en la llamada a service-b." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;align=left;fontSize=15;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;" parent="flujo" vertex="1">
+          <mxGeometry x="580" y="36" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;4. Lee los logs de esa traza&lt;/b&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Un clic filtra los logs por trace_id y muestra las 5 lineas de esa peticion." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;align=left;fontSize=15;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;" parent="flujo" vertex="1">
+          <mxGeometry x="862" y="36" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p5" value="&lt;b style=&quot;font-size: 15px;&quot;&gt;5. Causa identificada&lt;/b&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;&lt;br style=&quot;font-size: 15px;&quot;&gt;Sin cambiar de herramienta ni buscar a mano por marca de tiempo." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;align=left;fontSize=15;arcSize=8;spacingLeft=8;spacingTop=4;spacingRight=6;" parent="flujo" vertex="1">
+          <mxGeometry x="1144" y="36" width="250" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="f31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;fontSize=15;fontColor=#c0392b;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fff2cc;" parent="1" source="p1" target="p2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;fontSize=15;fontColor=#c0392b;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fff2cc;" parent="1" source="p2" target="p3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;fontSize=15;fontColor=#c0392b;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fff2cc;" parent="1" source="p3" target="p4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=block;endFill=1;fontSize=15;fontColor=#c0392b;dashed=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#fff2cc;" parent="1" source="p4" target="p5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#c0392b;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#c0392b;dashed=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="pivote" target="col_logs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#c0392b;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#c0392b;dashed=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="pivote" target="col_trazas" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#c0392b;strokeWidth=2;endArrow=block;endFill=1;fontSize=10;fontColor=#c0392b;dashed=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="pivote" target="col_metricas" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

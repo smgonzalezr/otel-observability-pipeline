@@ -1,0 +1,169 @@
+# =============================================================================
+# OpenTelemetry Collector para GCP (GKE)
+# Distribucion: otel/opentelemetry-collector-contrib
+#
+# Recibe OTLP de service-a y service-b, y reparte a tres destinos:
+#   trazas   -> Jaeger (via OTLP nativo) y Cloud Trace
+#   metricas -> endpoint Prometheus que raspa Prometheus / Managed Prometheus
+#   logs     -> Cloud Logging
+# =============================================================================
+
+receivers:
+  # Fase 2 pide gRPC y HTTP. gRPC lo usan los SDK, HTTP lo usan clientes web.
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        max_recv_msg_size_mib: 16
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - http://localhost:3000
+
+  # Auto observabilidad del Collector. Alimenta el panel de errores del dashboard.
+  prometheus/self:
+    config:
+      scrape_configs:
+        - job_name: otel-collector-self
+          scrape_interval: 15s
+          static_configs:
+            - targets: [localhost:8888]
+
+processors:
+  # Primero siempre. Corta la ingesta antes de que el pod muera por OOM.
+  memory_limiter:
+    check_interval: 5s
+    limit_mib: 512
+    spike_limit_mib: 128
+
+  # Etiqueta de donde vino cada senal. Es lo que permite filtrar por nube.
+  resource:
+    attributes:
+      - key: cloud.provider
+        value: gcp
+        action: upsert
+      - key: cloud.platform
+        value: gcp_kubernetes_engine
+        action: upsert
+      - key: deployment.environment.name
+        value: production
+        action: upsert
+      - key: telemetry.pipeline
+        value: gke-collector
+        action: upsert
+
+  # Contexto de Kubernetes que la aplicacion no conoce.
+  k8sattributes:
+    auth_type: serviceAccount
+    passthrough: false
+    extract:
+      metadata:
+        - k8s.namespace.name
+        - k8s.pod.name
+        - k8s.deployment.name
+        - k8s.node.name
+        - container.id
+
+  resourcedetection:
+    detectors: [env, gcp]
+    timeout: 5s
+    override: false
+
+  # Ultimo de la lista. Agrupa para bajar el numero de llamadas de salida.
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+    send_batch_max_size: 2048
+
+connectors:
+  # Deriva metricas RED a partir del 100% de los spans. Alimenta los SLI
+  # del dashboard sin depender de cuantas trazas se guarden.
+  spanmetrics:
+    histogram:
+      explicit:
+        buckets: [5ms, 10ms, 25ms, 50ms, 100ms, 250ms, 500ms, 1s, 2s]
+    dimensions:
+      - name: http.request.method
+      - name: http.route
+      - name: http.response.status_code
+      - name: service.name
+
+exporters:
+  # --- trazas ---
+  otlp/jaeger:
+    endpoint: jaeger-collector.observability.svc.cluster.local:4317
+    tls:
+      insecure: true
+    sending_queue:
+      enabled: true
+      queue_size: 2000
+    retry_on_failure:
+      enabled: true
+      max_elapsed_time: 120s
+
+  googlecloud:
+    project: ${env:GCP_PROJECT_ID}
+    log:
+      default_log_name: otel-demo
+    sending_queue:
+      enabled: true
+
+  # --- metricas ---
+  # Prometheus raspa este endpoint. Es la ruta que pide la Fase 2.
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    namespace: otel_demo
+    send_timestamps: true
+    resource_to_telemetry_conversion:
+      enabled: true
+
+  googlemanagedprometheus:
+    project: ${env:GCP_PROJECT_ID}
+
+  # --- diagnostico local ---
+  debug:
+    verbosity: basic
+    sampling_initial: 5
+    sampling_thereafter: 200
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+  pprof:
+    endpoint: 0.0.0.0:1777
+  zpages:
+    endpoint: 0.0.0.0:55679
+
+service:
+  extensions: [health_check, pprof, zpages]
+
+  pipelines:
+    # Entrada: recibe el 100% y alimenta el conector de metricas.
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, k8sattributes, resourcedetection, resource, batch]
+      exporters: [otlp/jaeger, googlecloud, spanmetrics]
+
+    metrics:
+      receivers: [otlp, prometheus/self, spanmetrics]
+      processors: [memory_limiter, k8sattributes, resourcedetection, resource, batch]
+      exporters: [prometheus, googlemanagedprometheus]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, k8sattributes, resourcedetection, resource, batch]
+      exporters: [googlecloud]
+
+  telemetry:
+    logs:
+      level: info
+      encoding: json
+    metrics:
+      level: detailed
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888

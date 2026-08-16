@@ -1,0 +1,48 @@
+# Valores para kube-prometheus-stack. Deja Grafana con Tempo y Jaeger ya
+# conectados, que es lo que habilita el salto de log a traza.
+grafana:
+  adminPassword: cambiar-en-produccion
+  defaultDashboardsEnabled: true
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+  additionalDataSources:
+    - name: Jaeger
+      type: jaeger
+      uid: jaeger
+      access: proxy
+      url: http://jaeger-query.observability.svc:16686
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: loki
+          spanStartTimeShift: -2m
+          spanEndTimeShift: 2m
+          filterByTraceID: true
+        tracesToMetrics:
+          datasourceUid: prometheus
+
+    - name: Loki
+      type: loki
+      uid: loki
+      access: proxy
+      url: http://loki.observability.svc:3100
+      jsonData:
+        # Convierte el campo trace_id del log en un enlace a la traza.
+        derivedFields:
+          - name: TraceID
+            matcherRegex: '"trace_id":"([a-f0-9]{32})"'
+            url: '$${__value.raw}'
+            datasourceUid: jaeger
+
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 15s
+    # Raspa el endpoint que expone el Collector con las metricas de OTLP.
+    additionalScrapeConfigs:
+      - job_name: otel-collector
+        static_configs:
+          - targets: ['otel-collector.observability.svc:8889']
+      - job_name: otel-collector-self
+        static_configs:
+          - targets: ['otel-collector.observability.svc:8888']

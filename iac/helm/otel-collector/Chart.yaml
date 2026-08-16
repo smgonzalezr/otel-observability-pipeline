@@ -1,0 +1,9 @@
+apiVersion: v2
+name: otel-collector
+description: OpenTelemetry Collector para el pipeline de observabilidad de la demo
+type: application
+version: 1.0.0
+appVersion: "0.113.0"
+keywords:
+  - opentelemetry
+  - observabilidad

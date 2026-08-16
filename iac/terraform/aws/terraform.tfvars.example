@@ -1,0 +1,5 @@
+region           = "us-east-1"
+nombre           = "otel-demo"
+replicas         = 2
+imagen_service_a = "123456789012.dkr.ecr.us-east-1.amazonaws.com/service-a:1.0.0"
+imagen_service_b = "123456789012.dkr.ecr.us-east-1.amazonaws.com/service-b:1.0.0"

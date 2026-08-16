@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="880" viewBox="0 0 1560 880" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="f" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#0b6ea8"/>
+    </marker>
+    <marker id="g" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 z" fill="#777"/>
+    </marker>
+  </defs>
+  <rect width="1560" height="880" fill="#ffffff"/>
+
+  <!-- ================= FASE 1: APLICACION ================= -->
+  <rect x="20" y="60" width="330" height="760" rx="10" fill="#f4f8fb" stroke="#8aa9bd" stroke-width="1.5"/>
+  <text x="185" y="88" text-anchor="middle" font-size="17" font-weight="bold" fill="#0b4a6e">FASE 1. Aplicacion + OTel SDK</text>
+
+  <rect x="40" y="106" width="290" height="230" rx="8" fill="#ffffff" stroke="#4285f4" stroke-width="2"/>
+  <text x="185" y="130" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a5fb4">service-a (Python, FastAPI)</text>
+  <text x="56" y="154" font-size="12.5" fill="#333">POST /checkout</text>
+  <rect x="56" y="164" width="258" height="76" rx="5" fill="#eef4ff" stroke="#4285f4"/>
+  <text x="66" y="182" font-size="12" font-weight="bold" fill="#1a5fb4">auto instrumentacion</text>
+  <text x="66" y="199" font-size="11.5" fill="#333">FastAPIInstrumentor  (HTTP servidor)</text>
+  <text x="66" y="215" font-size="11.5" fill="#333">HTTPXClientInstrumentor  (HTTP cliente)</text>
+  <text x="66" y="231" font-size="11.5" fill="#333">SQLite3Instrumentor  (base de datos)</text>
+  <rect x="56" y="248" width="258" height="76" rx="5" fill="#fff6e5" stroke="#e8a33d"/>
+  <text x="66" y="266" font-size="12" font-weight="bold" fill="#a5670a">spans propios de negocio</text>
+  <text x="66" y="283" font-size="11.5" fill="#333">flujo_checkout</text>
+  <text x="66" y="299" font-size="11.5" fill="#333">calcular_total_pedido</text>
+  <text x="66" y="315" font-size="11.5" fill="#333">reservar_inventario_remoto</text>
+
+  <rect x="40" y="352" width="290" height="212" rx="8" fill="#ffffff" stroke="#ff9900" stroke-width="2"/>
+  <text x="185" y="376" text-anchor="middle" font-size="15" font-weight="bold" fill="#b06a00">service-b (Python, FastAPI)</text>
+  <text x="56" y="400" font-size="12.5" fill="#333">POST /inventory/reserve</text>
+  <rect x="56" y="410" width="258" height="60" rx="5" fill="#fff3e0" stroke="#ff9900"/>
+  <text x="66" y="428" font-size="12" font-weight="bold" fill="#b06a00">auto instrumentacion</text>
+  <text x="66" y="445" font-size="11.5" fill="#333">FastAPI + SQLite3</text>
+  <text x="66" y="461" font-size="11.5" fill="#333">lee la cabecera traceparent entrante</text>
+  <rect x="56" y="478" width="258" height="72" rx="5" fill="#fff6e5" stroke="#e8a33d"/>
+  <text x="66" y="496" font-size="12" font-weight="bold" fill="#a5670a">spans propios de negocio</text>
+  <text x="66" y="513" font-size="11.5" fill="#333">reservar_inventario</text>
+  <text x="66" y="529" font-size="11.5" fill="#333">verificar_existencias</text>
+  <text x="66" y="545" font-size="11.5" fill="#333">aplicar_reserva</text>
+
+  <rect x="40" y="580" width="290" height="220" rx="8" fill="#ffffff" stroke="#5aa87c" stroke-width="2"/>
+  <text x="185" y="604" text-anchor="middle" font-size="15" font-weight="bold" fill="#1f6b41">Los tres pilares que emite el SDK</text>
+  <text x="56" y="630" font-size="12" font-weight="bold" fill="#333">trazas</text>
+  <text x="66" y="647" font-size="11.5" fill="#444">OTLP/gRPC al Collector, puerto 4317</text>
+  <text x="56" y="670" font-size="12" font-weight="bold" fill="#333">metricas</text>
+  <text x="66" y="687" font-size="11.5" fill="#444">PrometheusMetricReader en /metrics:9464</text>
+  <text x="66" y="703" font-size="11.5" fill="#444">ecommerce.orders.created, checkout.duration</text>
+  <text x="56" y="726" font-size="12" font-weight="bold" fill="#333">logs</text>
+  <text x="66" y="743" font-size="11.5" fill="#444">JSON por salida estandar, cada linea</text>
+  <text x="66" y="759" font-size="11.5" fill="#444">lleva trace_id y span_id</text>
+  <text x="56" y="784" font-size="11.5" fill="#c0392b">Propagacion: W3C TraceContext (traceparent)</text>
+
+  <line x1="352" y1="230" x2="424" y2="230" stroke="#0b6ea8" stroke-width="3" marker-end="url(#f)"/>
+  <text x="388" y="220" text-anchor="middle" font-size="11" fill="#0b6ea8">OTLP</text>
+  <line x1="352" y1="450" x2="424" y2="450" stroke="#0b6ea8" stroke-width="3" marker-end="url(#f)"/>
+  <text x="388" y="440" text-anchor="middle" font-size="11" fill="#0b6ea8">OTLP</text>
+  <path d="M330 400 C 370 400, 370 250, 344 250" fill="none" stroke="#777" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#g)"/>
+  <text x="392" y="330" text-anchor="middle" font-size="10.5" fill="#666">HTTP con</text>
+  <text x="392" y="345" text-anchor="middle" font-size="10.5" fill="#666">traceparent</text>
+
+  <!-- ================= FASE 2: COLLECTOR ================= -->
+  <rect x="428" y="60" width="368" height="760" rx="10" fill="#f6f4fb" stroke="#9b8ac4" stroke-width="1.5"/>
+  <text x="612" y="88" text-anchor="middle" font-size="17" font-weight="bold" fill="#4b338f">FASE 2. OpenTelemetry Collector</text>
+  <text x="612" y="108" text-anchor="middle" font-size="12" fill="#4b338f">GCP: DaemonSet en GKE  ·  AWS: sidecar en ECS Fargate</text>
+
+  <rect x="446" y="124" width="332" height="118" rx="8" fill="#ffffff" stroke="#7a5cc4" stroke-width="2"/>
+  <text x="460" y="148" font-size="14.5" font-weight="bold" fill="#4b338f">receivers</text>
+  <text x="460" y="170" font-size="12" fill="#333">otlp / grpc  0.0.0.0:4317</text>
+  <text x="460" y="189" font-size="12" fill="#333">otlp / http  0.0.0.0:4318</text>
+  <text x="460" y="208" font-size="12" fill="#333">prometheus/self  (metricas internas 8888)</text>
+  <text x="460" y="228" font-size="11.5" fill="#666">awsecscontainermetrics solo en ECS</text>
+
+  <rect x="446" y="256" width="332" height="146" rx="8" fill="#ffffff" stroke="#7a5cc4" stroke-width="2"/>
+  <text x="460" y="280" font-size="14.5" font-weight="bold" fill="#4b338f">processors (el orden importa)</text>
+  <text x="460" y="302" font-size="12" fill="#333">1. memory_limiter  (limit_mib 512)</text>
+  <text x="460" y="321" font-size="12" fill="#333">2. k8sattributes / resourcedetection</text>
+  <text x="460" y="340" font-size="12" fill="#333">3. resource  (cloud.provider, environment)</text>
+  <text x="460" y="359" font-size="12" fill="#333">4. batch  (timeout 5s, size 1024)</text>
+  <text x="460" y="382" font-size="11.5" fill="#666">memory_limiter primero, batch siempre al final</text>
+
+  <rect x="446" y="416" width="332" height="104" rx="8" fill="#ffffff" stroke="#7a5cc4" stroke-width="2"/>
+  <text x="460" y="440" font-size="14.5" font-weight="bold" fill="#4b338f">connectors</text>
+  <text x="460" y="462" font-size="12" fill="#333">spanmetrics</text>
+  <text x="470" y="480" font-size="11.5" fill="#666">deriva tasa, error y duracion desde los spans</text>
+  <text x="470" y="497" font-size="11.5" fill="#666">alimenta los SLI 1, 2 y 3 del dashboard</text>
+  <text x="460" y="514" font-size="11.5" fill="#c0392b">se ejecuta sobre el 100% de los spans</text>
+
+  <rect x="446" y="534" width="332" height="164" rx="8" fill="#ffffff" stroke="#7a5cc4" stroke-width="2"/>
+  <text x="460" y="558" font-size="14.5" font-weight="bold" fill="#4b338f">exporters</text>
+  <text x="460" y="580" font-size="12" font-weight="bold" fill="#1a5fb4">en GCP</text>
+  <text x="470" y="598" font-size="11.5" fill="#333">otlp/jaeger · googlecloud · googlemanagedprometheus</text>
+  <text x="470" y="615" font-size="11.5" fill="#333">prometheus (endpoint 8889)</text>
+  <text x="460" y="638" font-size="12" font-weight="bold" fill="#b06a00">en AWS</text>
+  <text x="470" y="656" font-size="11.5" fill="#333">awsxray · otlp/tempo · otlp/jaeger</text>
+  <text x="470" y="673" font-size="11.5" fill="#333">awsemf · awscloudwatchlogs · prometheus</text>
+  <text x="460" y="692" font-size="11.5" fill="#666">Es lo unico que cambia entre las dos nubes.</text>
+
+  <rect x="446" y="712" width="332" height="90" rx="8" fill="#f0ecf9" stroke="#9b8ac4" stroke-dasharray="5 3"/>
+  <text x="460" y="734" font-size="13" font-weight="bold" fill="#4b338f">Configuracion versionada</text>
+  <text x="460" y="754" font-size="11.5" fill="#333">GCP: ConfigMap desde collector/otel-collector-gcp.yaml</text>
+  <text x="460" y="772" font-size="11.5" fill="#333">AWS: SSM Parameter desde otel-collector-aws.yaml</text>
+  <text x="460" y="791" font-size="11.5" fill="#666">Los dos los crea Terraform con file(), no a mano.</text>
+
+  <line x1="798" y1="200" x2="866" y2="200" stroke="#0b6ea8" stroke-width="3" marker-end="url(#f)"/>
+  <line x1="798" y1="430" x2="866" y2="430" stroke="#0b6ea8" stroke-width="3" marker-end="url(#f)"/>
+  <line x1="798" y1="640" x2="866" y2="640" stroke="#0b6ea8" stroke-width="3" marker-end="url(#f)"/>
+
+  <!-- ================= FASE 3: BACKENDS Y VISUALIZACION ================= -->
+  <rect x="870" y="60" width="668" height="760" rx="10" fill="#f2faf5" stroke="#5aa87c" stroke-width="1.5"/>
+  <text x="1204" y="88" text-anchor="middle" font-size="17" font-weight="bold" fill="#1f6b41">FASE 3. Backends y visualizacion</text>
+
+  <rect x="890" y="110" width="316" height="196" rx="8" fill="#ffffff" stroke="#2e9e63" stroke-width="2"/>
+  <text x="1048" y="134" text-anchor="middle" font-size="15" font-weight="bold" fill="#1f6b41">TRAZAS</text>
+  <text x="906" y="158" font-size="12.5" font-weight="bold" fill="#1a5fb4">Jaeger UI  (GCP)</text>
+  <text x="916" y="176" font-size="11.5" fill="#444">vista de cascada de los 20 spans</text>
+  <text x="906" y="199" font-size="12.5" font-weight="bold" fill="#b06a00">AWS X-Ray o Tempo  (AWS)</text>
+  <text x="916" y="217" font-size="11.5" fill="#444">mismo trace_id en las dos nubes</text>
+  <text x="906" y="244" font-size="11.5" fill="#333">Verificacion de propagacion:</text>
+  <text x="916" y="262" font-size="11.5" fill="#444">una traza, dos servicios, 20 spans</text>
+  <text x="916" y="279" font-size="11.5" fill="#444">los spans de service-b cuelgan de service-a</text>
+  <text x="916" y="296" font-size="11.5" fill="#666">ver Figura 2</text>
+
+  <rect x="1222" y="110" width="298" height="196" rx="8" fill="#ffffff" stroke="#2e9e63" stroke-width="2"/>
+  <text x="1371" y="134" text-anchor="middle" font-size="15" font-weight="bold" fill="#1f6b41">METRICAS</text>
+  <text x="1238" y="158" font-size="12.5" font-weight="bold" fill="#333">Prometheus + Grafana</text>
+  <text x="1248" y="176" font-size="11.5" fill="#444">raspa el endpoint 8889 del Collector</text>
+  <text x="1248" y="193" font-size="11.5" fill="#444">y el 9464 de cada servicio</text>
+  <text x="1238" y="216" font-size="12.5" font-weight="bold" fill="#333">Dashboard de 6 paneles</text>
+  <text x="1248" y="234" font-size="11.5" fill="#444">4 SLI: rps, error, latencia, negocio</text>
+  <text x="1248" y="251" font-size="11.5" fill="#444">1 panel de CPU y memoria</text>
+  <text x="1248" y="268" font-size="11.5" fill="#444">1 panel de errores del Collector</text>
+  <text x="1248" y="292" font-size="11.5" fill="#666">dashboards/grafana-observabilidad.json</text>
+
+  <rect x="890" y="322" width="630" height="180" rx="8" fill="#ffffff" stroke="#2e9e63" stroke-width="2"/>
+  <text x="1205" y="346" text-anchor="middle" font-size="15" font-weight="bold" fill="#1f6b41">LOGS y CORRELACION</text>
+  <text x="906" y="372" font-size="12.5" font-weight="bold" fill="#333">Destino</text>
+  <text x="916" y="390" font-size="11.5" fill="#444">GCP: Cloud Logging   ·   AWS: CloudWatch Logs   ·   local: Loki</text>
+  <text x="906" y="416" font-size="12.5" font-weight="bold" fill="#333">Pivote: el campo trace_id de cada linea JSON</text>
+  <text x="916" y="436" font-size="11.5" fill="#444">Grafana convierte ese campo en un enlace con derivedFields, asi que</text>
+  <text x="916" y="453" font-size="11.5" fill="#444">desde un log se abre la traza y desde una traza se filtran sus logs.</text>
+  <text x="916" y="475" font-size="11.5" fill="#444">En GCP el campo logging.googleapis.com/trace hace lo mismo sin configurar nada.</text>
+  <text x="916" y="493" font-size="11.5" fill="#666">ver Figura 3</text>
+
+  <!-- FASE 4 -->
+  <rect x="890" y="522" width="630" height="278" rx="8" fill="#fdf6f2" stroke="#c58f6e" stroke-width="2"/>
+  <text x="1205" y="548" text-anchor="middle" font-size="15.5" font-weight="bold" fill="#8a4a1e">FASE 4. Analisis de overhead (medido)</text>
+  <text x="906" y="574" font-size="12" fill="#333">Escenario: 2 repeticiones, 8 usuarios concurrentes, 60 s por corrida, mediana.</text>
+  <text x="906" y="592" font-size="12" fill="#333">La latencia se mide desde el cliente, nunca con el instrumento evaluado.</text>
+
+  <line x1="906" y1="608" x2="1504" y2="608" stroke="#d8c3b3"/>
+  <text x="906" y="628" font-size="12" font-weight="bold" fill="#333">metrica</text>
+  <text x="1150" y="628" font-size="12" font-weight="bold" fill="#333">sin OTel</text>
+  <text x="1265" y="628" font-size="12" font-weight="bold" fill="#333">con OTel</text>
+  <text x="1390" y="628" font-size="12" font-weight="bold" fill="#333">cambio</text>
+
+  <text x="906" y="650" font-size="12" fill="#333">Latencia p50</text>
+  <text x="1150" y="650" font-size="12" fill="#444">19,77 ms</text>
+  <text x="1265" y="650" font-size="12" fill="#444">30,77 ms</text>
+  <text x="1390" y="650" font-size="12" fill="#c0392b">+55,6 %</text>
+
+  <text x="906" y="670" font-size="12" fill="#333">Latencia p99</text>
+  <text x="1150" y="670" font-size="12" fill="#444">155,20 ms</text>
+  <text x="1265" y="670" font-size="12" fill="#444">159,36 ms</text>
+  <text x="1390" y="670" font-size="12" fill="#c0392b">+2,7 %</text>
+
+  <text x="906" y="690" font-size="12" fill="#333">Throughput</text>
+  <text x="1150" y="690" font-size="12" fill="#444">268,2 rps</text>
+  <text x="1265" y="690" font-size="12" fill="#444">197,3 rps</text>
+  <text x="1390" y="690" font-size="12" fill="#c0392b">-26,5 %</text>
+
+  <text x="906" y="710" font-size="12" fill="#333">CPU (2 servicios)</text>
+  <text x="1150" y="710" font-size="12" fill="#444">111,2 %</text>
+  <text x="1265" y="710" font-size="12" fill="#444">155,6 %</text>
+  <text x="1390" y="710" font-size="12" fill="#c0392b">+39,9 %</text>
+
+  <text x="906" y="730" font-size="12" fill="#333">Memoria RSS</text>
+  <text x="1150" y="730" font-size="12" fill="#444">96,6 MB</text>
+  <text x="1265" y="730" font-size="12" fill="#444">150,3 MB</text>
+  <text x="1390" y="730" font-size="12" fill="#c0392b">+55,6 %</text>
+
+  <line x1="906" y1="744" x2="1504" y2="744" stroke="#d8c3b3"/>
+  <text x="906" y="766" font-size="12" fill="#333">Con muestreo de cabecera al 10 por ciento los spans bajan 88,3 % y el</text>
+  <text x="906" y="784" font-size="12" fill="#333">throughput sube de 197 a 220 rps. Ver Figura 4 y la seccion de overhead.</text>
+
+  <text x="20" y="36" font-size="19" font-weight="bold" fill="#111">Pipeline de observabilidad end to end con OpenTelemetry</text>
+  <text x="600" y="36" font-size="13" fill="#555">service-a → service-b  ·  GCP GKE y AWS ECS Fargate  ·  trazas, metricas y logs unidos por trace_id</text>
+</svg>
