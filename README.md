@@ -37,10 +37,7 @@ reporte tecnico con los resultados medidos.
 │   ├── prometheus.yml
 │   └── promtail.yml
 ├── docs/
-│   ├── Reporte_tecnico.pdf      el entregable escrito
-│   ├── Reporte_tecnico_APA.docx la misma version con normas APA 7
-│   ├── CAPTURAS.md              como tomar las capturas de Jaeger y Grafana
-│   ├── PUBLICAR_EN_GITHUB.md    paso a paso para publicar el repositorio
+│   ├── Informe_Actividad_4_SMGR_EICH_20260816.pdf      el entregable escrito
 │   ├── evidencia/               traza, logs y metricas capturados de verdad
 │   └── figuras/                 las cuatro figuras, en PNG, SVG y draw.io
 └── docker-compose.yaml          stack completo en local
